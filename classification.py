@@ -47,10 +47,12 @@ def show_image(img):
     plt.show()
 
 
-global activation_method
+activation_method = 3
 
 # Create a fully connected layer
 def fully_connected(enco,drop_param):
+    global activation_method
+
     flat = Flatten()(enco)
     drop1 = Dropout(drop_param)(flat)
     den = Dense(128, activation='relu')(drop1)
