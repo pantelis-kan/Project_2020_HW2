@@ -12,7 +12,11 @@ from keras.utils import to_categorical
 
 def read_labels(filename, num_images):
     f = open(filename, "rb")
-    f.read(8)
+    f.read(4)
+
+    num_images = int.from_bytes(f.read(4), 'big')
+#    print("Total images in labels file: ", num_images)
+
     buf = f.read(1 * num_images)
     labels = np.frombuffer(buf, dtype=np.uint8).astype(np.int64)
     return labels
@@ -24,7 +28,12 @@ def read_input(filename, num_images):
     image_size = 28
 
     #ignore header
-    f.read(16)
+    f.read(4)
+
+    num_images = int.from_bytes(f.read(4), 'big')
+#    print("Total images in file: ", num_images)
+
+    f.read(8)
 
     buf = f.read(image_size * image_size * num_images)
     data = np.frombuffer(buf, dtype=np.uint8).astype(np.float32) / 255
@@ -117,8 +126,6 @@ test_Y_one_hot = to_categorical(test_labels)
 # Normalize data in the 0-1 scale
 train_data = train_data / np.max(train_data)
 test_data = test_data / np.max(test_data)
-
-
 
 
 
